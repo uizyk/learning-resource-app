@@ -1,30 +1,36 @@
 <template>
-
-    <base-card>
-        <base-button @click="setSelectedTab('stored-resources')" :mode="storedResButtonMode">Stored Resources</base-button>
-        <base-button @click="setSelectedTab('add-resources')" :mode="addResButtonMode" >Add Resource Resources</base-button>
-    </base-card>
-    <base-card>
-      <stored-resources v-if="selectedTab === 'stored-resources'"></stored-resources>
-      <keep-alive>
-        <add-resources v-if="selectedTab === 'add-resources'"></add-resources>
-      </keep-alive>
-    </base-card>
-
+  <base-card>
+    <base-button
+      @click="setSelectedTab('stored-resources')"
+      :mode="storedResButtonMode"
+      >Stored Resources</base-button
+    >
+    <base-button
+      @click="setSelectedTab('add-resources')"
+      :mode="addResButtonMode"
+      >Add Resource Resources</base-button
+    >
+  </base-card>
+  <base-card>
+    <stored-resources
+      v-if="selectedTab === 'stored-resources'"
+    ></stored-resources>
+    <keep-alive>
+      <add-resources v-if="selectedTab === 'add-resources'"></add-resources>
+    </keep-alive>
+  </base-card>
 </template>
 
-
 <script>
-
-import StoredResources from './StoredResources.vue';
-import AddResources from './AddResource.vue';
+import StoredResources from "./StoredResources.vue";
+import AddResources from "./AddResource.vue";
 
 export default {
-    components: {
-        StoredResources,
-        AddResources
-    },
-    
+  components: {
+    StoredResources,
+    AddResources,
+  },
+
   data() {
     return {
       selectedTab: "stored-resources",
@@ -45,36 +51,39 @@ export default {
     };
   },
   provide() {
-    return{
-        resources: this.storedResources,
-        addResource: this.addResource
-    }
+    return {
+      resources: this.storedResources,
+      addResource: this.addResource,
+      deleteResource: this.deleteResource
+    };
   },
 
   methods: {
     setSelectedTab(tab) {
       this.selectedTab = tab;
     },
-    addResource(title, description, url){
+    addResource(title, description, url) {
       const newResource = {
         id: new Date().toISOString(),
         title: title,
         description: description,
-        link: url
-      }
+        link: url,
+      };
       this.storedResources.unshift(newResource);
-      this.selectedTab = 'stored-resources';
+      this.selectedTab = "stored-resources";
+    },
+    deleteResource(resId){
+      const resIndex = this.storedResources.findIndex(res => res.id === resId);
+      this.storedResources.splice(resIndex, 1);
     }
   },
   computed: {
-    storedResButtonMode(){
-      return this.selectedTab === 'stored-resources' ? null : 'flat'
+    storedResButtonMode() {
+      return this.selectedTab === "stored-resources" ? null : "flat";
     },
-    addResButtonMode(){
-      return this.selectedTab === 'add-resources' ? null : 'flat'
-    }
-  }
+    addResButtonMode() {
+      return this.selectedTab === "add-resources" ? null : "flat";
+    },
+  },
 };
 </script>
-
-
