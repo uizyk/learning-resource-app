@@ -1,4 +1,5 @@
 <template>
+  <teleport to="body">
     <div @click="$emit('close')"></div>
         <dialog open>
             <header>
@@ -14,6 +15,7 @@
                 <base-button @click="$emit('close')"></base-button>
             </menu>
         </dialog>
+  </teleport>
 </template>
 
 
